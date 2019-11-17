@@ -1,17 +1,4 @@
 ######## Webcam Object Detection Using Tensorflow-trained Classifier #########
-#
-# Author: Evan Juras
-# Date: 10/27/19
-# Description:
-# This program uses a TensorFlow Lite model to perform object detection on a live webcam
-# feed. It draws boxes and scores around the objects of interest in each frame from the
-# webcam. To improve FPS, the webcam object runs in a separate thread from the main program.
-# This script will also work with a Picamera on the Raspberry Pi.
-#
-# This code is based off the TensorFlow Lite image classification example at:
-# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/examples/python/label_image.py
-#
-# I added my own method of drawing boxes and labels using OpenCV.
 
 # Import packages
 import os
@@ -66,6 +53,7 @@ def main():
     parser.add_argument('--sleep', help='Set the number of seconds between each detection',
                         default=60)
     parser.add_argument('--cameraip', help='IP from the camera')
+    parser.add_argument('--showlog', help='True to show log or False to do not show log', default=False)
 
     args = parser.parse_args()
 
@@ -74,6 +62,7 @@ def main():
     LABELMAP_NAME = args.labels
     SLEEP_TIME = args.sleep
     CAMERA_IP = args.cameraip
+    SHOW_LOG = args.showlog
 
     min_conf_threshold = args.threshold
 
@@ -157,7 +146,8 @@ def main():
             if scores[i] > min_conf_threshold and scores[i] <= 1.0 and labels[int(classes[i])] == 'person':
                 num_people += 1
 
-        print(num_people)
+        if SHOW_LOG :
+            print("Number of people detected: " + str(num_people))
         # Press 'q' to quit
         if cv2.waitKey(1) == ord('q'):
             break

@@ -22,14 +22,17 @@ pip3 install psutil==5.6.3
 version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 arch=$(uname -i)
 
-if [ "$arch" == 'armv*' ]; then
-    if [ $version == "3.7" ]; then
+if [ "$arch" = 'armv*' ]  || [ "$arch" = 'unknown' ]
+then
+    if [ $version == "3.7" ]
+     then
         wget https://github.com/lhelontra/tensorflow-on-arm/releases/download/v2.0.0/tensorflow-2.0.0-cp37-none-linux_armv7l.whl
         pip3 install tensorflow-2.0.0-cp37-none-linux_armv7l.whl
         rm tensorflow-2.0.0-cp37-none-linux_armv7l.whl
     fi
 
-    if [ $version == "3.5" ]; then
+    if [ $version == "3.5" ]
+    then
         wget https://github.com/lhelontra/tensorflow-on-arm/releases/download/v1.14.0/tensorflow-1.14.0-cp35-none-linux_armv7l.whl
         pip3 install tensorflow-1.14.0-cp35-none-linux_armv7l.whl
         rm tensorflow-1.14.0-cp35-none-linux_armv7l.whl
