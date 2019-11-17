@@ -65,6 +65,7 @@ def main():
                         default='1280x720')
     parser.add_argument('--sleep', help='Set the number of seconds between each detection',
                         default=60)
+    parser.add_argument('--cameraip', help='IP from the camera')
 
     args = parser.parse_args()
 
@@ -72,6 +73,7 @@ def main():
     GRAPH_NAME = args.graph
     LABELMAP_NAME = args.labels
     SLEEP_TIME = args.sleep
+    CAMERA_IP = args.cameraip
 
     min_conf_threshold = args.threshold
 
@@ -115,7 +117,8 @@ def main():
     freq = cv2.getTickFrequency()
 
     # Initialize video stream
-    videostream = VideoStream(resolution=(imW, imH), framerate=30).start()
+    videostream = VideoStream(
+        resolution=(imW, imH), framerate=30, camera_ip=CAMERA_IP).start()
     time.sleep(1)
 
     # for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
