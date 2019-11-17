@@ -23,5 +23,8 @@ A finalidade desse sistema é detectar quantas pessoas estão em algum ambiente 
   - --graph', Nome do arquivo .tflite, se diferente de detect.tflite
   - --labels', Nome do arquivo labelmap, se diferente de labelmap.txt
   - --threshold, Threshold de confiança mínimo para detecção dos objetos
+  - --sleep, Configura o número de segundos entre as detecções
+  - --cameraip, IP da câmera
+  - --showlog, True para mostrar o log ou False para não mostrar
  
 
