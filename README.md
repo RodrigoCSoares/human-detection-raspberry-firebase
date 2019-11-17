@@ -1,7 +1,7 @@
 # Projeto MEC
  
 ## Introdução
-Primeiramente, gostaria de agradecer ao EdjeElectronics por disponibilizar seu repositório com a implementação de detecção de objetos com TensorFlow a partir de uma Raspberry PI, esse projeto é uma adaptação desse projeto.
+Primeiramente, gostaria de agradecer ao EdjeElectronics por disponibilizar seu repositório com a implementação de detecção de objetos com TensorFlow a partir de uma Raspberry PI, esse projeto é uma adaptação do projeto dele.
 A finalidade desse sistema é detectar quantas pessoas estão em algum ambiente a partir de uma Webcam (conectada ou via IP) e enviar essas informações para o Cloud Firestore do Firebase.
  
 ## Requisitos
@@ -20,8 +20,8 @@ A finalidade desse sistema é detectar quantas pessoas estão em algum ambiente 
 - Execute: python3 TFLite_detection_webcam.py
 - Algumas flags estão disponíveis para o comando acima, sendo elas:
   - --modeldir: Pasta em que o modelo .tflite está localizado, OBRIGATÓRIO
-  - --graph', Nome do arquivo .tflite, se diferente de detect.tflite
-  - --labels', Nome do arquivo labelmap, se diferente de labelmap.txt
+  - --graph, Nome do arquivo .tflite, se diferente de detect.tflite
+  - --labels, Nome do arquivo labelmap, se diferente de labelmap.txt
   - --threshold, Threshold de confiança mínimo para detecção dos objetos
   - --sleep, Configura o número de segundos entre as detecções
   - --cameraip, IP da câmera
