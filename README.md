@@ -1,4 +1,4 @@
-# Projeto MEC
+# Human detection with Firebase connection for Raspberry PI
  
 ## Introdução
 Primeiramente, gostaria de agradecer ao EdjeElectronics por disponibilizar seu repositório com a implementação de detecção de objetos com TensorFlow a partir de uma Raspberry PI, esse projeto é uma adaptação do projeto dele.
