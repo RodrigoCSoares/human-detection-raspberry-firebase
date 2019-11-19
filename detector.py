@@ -1,4 +1,4 @@
-######## Webcam Object Detection Using Tensorflow-trained Classifier #########
+######## Webcam Human Detection Using Tensorflow-trained Classifier #########
 
 # Import packages
 import os
@@ -30,15 +30,7 @@ def sendDataToFirebase(num_people):
         "performance", "performance", PerformanceTracker.getCurrentPerformanceStatus())
 
 
-def main():
-    # If tensorflow is not installed, import interpreter from tflite_runtime, else import from regular tensorflow
-    pkg = importlib.util.find_spec('tensorflow')
-    if pkg is None:
-        from tflite_runtime.interpreter import Interpreter
-    else:
-        from tensorflow.lite.python.interpreter import Interpreter
-
-    # Define and parse input arguments
+def getParameters():
     parser = argparse.ArgumentParser()
     parser.add_argument('--modeldir', help='Folder the .tflite file is located in',
                         default='models')
@@ -53,18 +45,27 @@ def main():
     parser.add_argument('--sleep', help='Set the number of seconds between each detection',
                         default=60)
     parser.add_argument('--cameraip', help='IP from the camera')
-    parser.add_argument('--showlog', help='True to show log or False to do not show log', default=False)
+    parser.add_argument(
+        '--showlog', help='True to show log or False to do not show log', default=False)
+    return parser.parse_args()
 
-    args = parser.parse_args()
 
+def main():
+    # If tensorflow is not installed, import interpreter from tflite_runtime, else import from regular tensorflow
+    pkg = importlib.util.find_spec('tensorflow')
+    if pkg is None:
+        from tflite_runtime.interpreter import Interpreter
+    else:
+        from tensorflow.lite.python.interpreter import Interpreter
+
+    args = getParameters()
     MODEL_NAME = args.modeldir
     GRAPH_NAME = args.graph
     LABELMAP_NAME = args.labels
     SLEEP_TIME = args.sleep
     CAMERA_IP = args.cameraip
     SHOW_LOG = args.showlog
-
-    min_conf_threshold = args.threshold
+    MIN_CONF_THRESHOLD = args.threshold
 
     resW, resH = args.resolution.split('x')
     imW, imH = int(resW), int(resH)
@@ -110,9 +111,12 @@ def main():
         resolution=(imW, imH), framerate=30, camera_ip=CAMERA_IP).start()
     time.sleep(1)
 
-    # for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
-    while True:
+    # Start time
+    startTime = time.time()
 
+    # Mean of people
+    people_mean = 0
+    while True:
         # Grab frame from video stream
         frame1 = videostream.read()
 
@@ -137,29 +141,28 @@ def main():
             0]  # Class index of detected objects
         scores = interpreter.get_tensor(output_details[2]['index'])[
             0]  # Confidence of detected objects
-        # num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
-        # People counter
-        num_people = 0
+        # Current people detected
+        current_num_people = 0
+
         # Loop over all detections and draw detection box if confidence is above minimum threshold
         for i in range(len(scores)):
-            if scores[i] > min_conf_threshold and scores[i] <= 1.0 and labels[int(classes[i])] == 'person':
-                num_people += 1
+            if scores[i] > MIN_CONF_THRESHOLD and scores[i] <= 1.0 and labels[int(classes[i])] == 'person':
+                current_num_people += 1
 
-        if SHOW_LOG :
-            print("Number of people detected: " + str(num_people))
-        # Press 'q' to quit
-        if cv2.waitKey(1) == ord('q'):
-            break
+        # Update people mean
+        people_mean = (people_mean + current_num_people) / 2
 
-        # Send data to firebase
-        sendDataToFirebase(num_people)
+        if SHOW_LOG:
+            print("Current people mean: " + str(people_mean))
 
-        # Sleep the thread before the next detection
-        time.sleep(SLEEP_TIME)
+        # If should send information to Firebase
+        if time.time() - startTime > SLEEP_TIME:
+            # Update start time
+            startTime = time.time()
+            sendDataToFirebase(round(people_mean))
 
     # Clean up
-    cv2.destroyAllWindows()
     videostream.stop()
 
 
