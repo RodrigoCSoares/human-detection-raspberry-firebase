@@ -25,4 +25,3 @@ The purpose of this system is to detect how many people are in any environment f
     - --sleep, Set the number of seconds between detections
     - --cameraip, camera's IP
     - --showlog, True to show log or False to do not show
-De
