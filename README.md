@@ -1,7 +1,7 @@
 # Human detection with Firebase connection for Raspberry PI
  
 ## Introduction
-First of all, I would like to thank EdjeElectronics for making its repository available by implementing object detection with TensorFlow from a Raspberry PI, this project is an adaptation of his project.
+First of all, I would like to thank EdjeElectronics for making his repository available by implementing object detection with TensorFlow from a Raspberry PI, this project is an adaptation of his project.
 The purpose of this system is to detect how many people are in any environment from a webcam (connected or via IP) and send this information to Firebase Cloud Firestore.
  
 ## Requirements
@@ -25,3 +25,4 @@ The purpose of this system is to detect how many people are in any environment f
     - --sleep, Set the number of seconds between detections
     - --cameraip, camera's IP
     - --showlog, True to show log or False to do not show
+De
